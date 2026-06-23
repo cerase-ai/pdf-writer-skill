@@ -1,7 +1,6 @@
 ---
-slug: pdf-writer
+name: pdf-writer
 description: "Genera PDF da contenuto strutturato (report, lettera, certificato). Usa cerase-office-converter via docx→pdf o md→pdf. Per slide-PDF usa `deck`/`pptx` con format=pdf."
-is_core: true
 ---
 # PDF writer — generated PDFs
 

@@ -1,6 +1,6 @@
 ---
 name: pdf-writer
-description: "Genera PDF da contenuto strutturato (report, lettera, certificato). Usa cerase-office-converter via docx→pdf o md→pdf. Per slide-PDF usa `deck`/`pptx` con format=pdf."
+description: "Generates a PDF from structured content (report, letter, certificate). Uses cerase-office-converter via docx→pdf or md→pdf. For slide PDFs use `deck`/`pptx` with format=pdf."
 ---
 # PDF writer — generated PDFs
 

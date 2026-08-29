@@ -8,9 +8,9 @@ Create `.pdf` documents from structured content. This skill is **for non-slide P
 
 ## When to activate
 
-- "genera un report PDF di ..."
-- "crea una lettera in PDF per ..."
-- "esporta questo riassunto in PDF"
+- "generate a PDF report on ..."
+- "write me a letter as a PDF for ..."
+- "export this summary to PDF"
 - `source-to-artifact` Stage 4 with target_format=pdf and target_kind=document (not slides)
 
 Don't activate for: slide decks (`deck`), spreadsheet exports (use `xlsx` → `cerase-office-converter.convert_xlsx_to_pdf`).

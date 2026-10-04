@@ -6,4 +6,4 @@
 # of the bundle that ships to the agent.
 it:
   display_name: "Pdf Writer"
-  description: "Genera PDF da contenuto strutturato (report, lettera, certificato). Usa cerase-office-converter via docx→pdf o md→pdf. Per slide-PDF usa `deck`/`pptx` con format=pdf."
+  description: "Genera un documento PDF — un report, una lettera, un certificato, un riepilogo — tramite il convertitore di documenti. Per una presentazione in PDF usa `deck`; per un foglio di calcolo in PDF, `xlsx`."

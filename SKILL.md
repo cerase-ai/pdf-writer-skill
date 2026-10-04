@@ -1,72 +1,70 @@
 ---
 name: pdf-writer
-description: "Generates a PDF from structured content (report, letter, certificate). Uses cerase-office-converter via docx→pdf or md→pdf. For slide PDFs use `deck`/`pptx` with format=pdf."
+description: "Generates a PDF document — a report, a letter, a certificate, a summary — through the office converter. For a slide deck in PDF use `deck`; for a spreadsheet in PDF, `xlsx`."
 ---
-# PDF writer — generated PDFs
+# PDF writer — documents as PDF
 
-Create `.pdf` documents from structured content. This skill is **for non-slide PDFs** — formal reports, business letters, certificates, summaries. For presentation-style PDFs use `deck` (Path A) instead.
+Create a `.pdf` document from content the conversation provides. This skill is for documents: reports, business letters, certificates, summaries. A presentation in PDF is the `deck` skill. Your container runs no Python, so you never build the PDF yourself: the office converter does.
 
 ## When to activate
 
-- "generate a PDF report on ..."
-- "write me a letter as a PDF for ..."
+- "generate a PDF report on …"
+- "write me a letter as a PDF for …"
 - "export this summary to PDF"
-- `source-to-artifact` Stage 4 with target_format=pdf and target_kind=document (not slides)
+- `source-to-artifact` with a PDF document as the target
 
-Don't activate for: slide decks (`deck`), spreadsheet exports (use `xlsx` → `cerase-office-converter.convert_xlsx_to_pdf`).
+## Choose the path
 
-## Backend choice
+### Path 1 — markdown to PDF (the default)
 
-### Path 1 — markdown source → PDF via pandoc + xelatex (recommended)
-
-Fastest, most stable. Use when content is in markdown:
+For text with headings, lists and tables. Write `<name>.md` in the workspace, starting with a YAML block for the title:
 
 ```
-# 1. Encode the markdown source as base64
-# 2. Call the converter recipe:
-call_recipe("cerase-office-converter.convert_md_to_pdf", {input_b64: <base64 of markdown>})
+---
+title: Quarterly report for Northwind Traders
+author: Ada Rossi
+date: 2026-10-05
+---
 ```
 
-Returns `{filename, size_bytes, contents_base64}`. Decode + write `.pdf` to workspace.
-
-### Path 2 — docx source → PDF via LibreOffice
-
-When the document was first created as .docx (e.g. via the `docx` skill), convert:
+then `#` sections, `- ` bullets and pipe tables. Then:
 
 ```
-call_recipe("cerase-office-converter.convert_docx_to_pdf", {input_b64: <base64 of .docx>})
+call_recipe("cerase-office-converter.convert_md_to_pdf", {"path": "<name>.md", "output_filename": "<name>.pdf"})
 ```
 
-### Path 3 — direct reportlab (programmatic PDF, fallback)
+### Path 2 — a Word document to PDF
 
-When the content needs **precise layout control** (certificates, multi-column letters, custom positioning):
+When the document already exists as a .docx (made with the `docx` skill, or sent by the person):
 
-```python
-from reportlab.lib.pagesizes import A4
-from reportlab.pdfgen import canvas
-c = canvas.Canvas('<filename>.pdf', pagesize=A4)
-c.setFont('Helvetica-Bold', 24)
-c.drawString(50, 800, '<title>')
-c.setFont('Helvetica', 12)
-c.drawString(50, 760, '<body>')
-c.save()
+```
+call_recipe("cerase-office-converter.convert_docx_to_pdf", {"path": "<file>.docx", "output_filename": "<name>.pdf"})
 ```
 
-Path 3 is power-tool — use ONLY when 1+2 don't give the control needed. Most reports fit Path 1.
+### Path 3 — a designed page to PDF
+
+When the layout itself matters: a certificate, a letter on letterhead, a one-page flyer, columns placed where you choose. Write `<name>.html` in the workspace, one file with its CSS in a `<style>` block, then:
+
+```
+call_recipe("cerase-office-converter.convert_html_to_pdf", {"path": "<name>.html", "output_filename": "<name>.pdf", "paper": "A4", "orientation": "portrait"})
+```
+
+It prints the page the way a browser does, so CSS grid, flexbox and background colours are kept. `paper` is A4, A3, A5, letter or legal; `orientation` is portrait or landscape. Put images inline as `data:` URIs: the converter receives the HTML file alone, so an image named by a relative path is not found.
+
+Each path answers `{path, filename, size_bytes}`: the PDF is in your workspace at `path`, which is `outputs/<name>.pdf`. These calls are the complete set. Do not invent others.
+
+## Deliver
+
+Attach the file: `[[attach: outputs/<name>.pdf]]`. Never paste its content or any base64 in the chat, and do not show the person file paths they do not need.
 
 ## Style rules
 
-- **A4 portrait** unless the user specifies landscape (rare for documents).
-- **Margins**: 2cm/2.5cm L/R, 2cm T/B (default pandoc settings — don't override unless asked).
-- **Header/footer**: page number bottom-right; document title top-left (pandoc handles via `--metadata`).
-- **Font**: stick to Liberation Serif / Liberation Sans / DejaVu (these are in the converter image — others may render as placeholders).
-
-## Output handling
-
-After creating the PDF, attach to the reply so the user receives it as a file. Don't paste the base64 in chat. Don't echo file paths the user doesn't need to see.
+- **A4 portrait** unless the person asks for landscape.
+- **Fonts**: in Path 3 use Liberation Serif, Liberation Sans, DejaVu or Noto; other fonts are not on the converter and print as a substitute.
+- **One title**, then sections; a report longer than a few pages starts with a short summary.
 
 ## Don't
 
-- Don't generate PDFs > 50 pages without asking — usually means the source was way too long to compress into prose. Check with the user.
-- Don't embed external images (web URLs) — they render inconsistently. Convert image source separately if needed.
-- Don't try to encrypt/password-protect: PoC scope, security on PDFs is v0.x.
+- Don't write Python, or call `pandoc`, `libreoffice` or a browser from bash: none of them is in your container.
+- Don't produce more than 50 pages without asking: it usually means the source was too long to turn into prose.
+- Don't password-protect a PDF: this skill cannot.

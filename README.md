@@ -1,9 +1,9 @@
 # pdf-writer-skill
 
-A Cerase skill that has the assistant produce a PDF document from structured
-content: a report, a business letter, a certificate, a summary. The assistant
-uses it for requests such as "generate a PDF report on…" or "export this
-summary to PDF", and when `source-to-artifact` asks for a PDF document. Slide
+A Cerase skill that has the assistant produce a PDF document from content the
+conversation provides: a report, a business letter, a certificate, a summary.
+The assistant uses it for requests such as "generate a PDF report on…" or
+"export this summary to PDF", and when `source-to-artifact` asks for a PDF document. Slide
 decks go to the `deck` skill, and spreadsheets to the `xlsx` skill with
 `cerase-office-converter.convert_xlsx_to_pdf`.
 
@@ -11,26 +11,35 @@ decks go to the `deck` skill, and spreadsheets to the `xlsx` skill with
 
 It picks one of three paths:
 
-1. **Markdown to PDF**, the default: encodes the markdown as base64 and calls
-   `cerase-office-converter.convert_md_to_pdf` (pandoc with XeLaTeX).
+1. **Markdown to PDF**, the default: writes the content as a markdown file in
+   the workspace, with a YAML block for title, author and date, and converts
+   it with `cerase-office-converter.convert_md_to_pdf` (pandoc with XeLaTeX).
 2. **Word to PDF**, when the document already exists as `.docx`, for example
-   from the `docx` skill: `cerase-office-converter.convert_docx_to_pdf`
-   (LibreOffice).
-3. **reportlab**, only when the layout needs exact positioning that the first
-   two cannot give, such as a certificate: the assistant writes the PDF with
-   reportlab itself.
+   from the `docx` skill or sent by the person:
+   `cerase-office-converter.convert_docx_to_pdf` (LibreOffice).
+3. **HTML to PDF**, when the layout itself matters, such as a certificate, a
+   letter on letterhead or a one-page flyer: the assistant writes one HTML file
+   with its CSS in a `<style>` block and converts it with
+   `cerase-office-converter.convert_html_to_pdf` (headless Chromium), which
+   keeps CSS grid, flexbox and background colours. Paper size (A4, A3, A5,
+   letter, legal) and orientation are parameters of the call, and images go
+   inline as `data:` URIs because the converter receives the HTML file alone.
 
-The result is attached to the reply as a file, never pasted as base64. The
-skill's layout rules ask for A4 portrait unless landscape is requested,
-pandoc's default margins, the page number bottom right and the title top left,
-and only the Liberation or DejaVu fonts installed in the converter. The
-assistant asks before producing more than 50 pages, does not embed images from
-web URLs, and does not encrypt or password-protect the PDF.
+The converter writes the PDF to `outputs/` in the workspace and returns its
+path; the assistant attaches it with `[[attach: <path>]]` and never pastes its
+content or base64 in the chat. The skill's layout rules ask for A4 portrait
+unless landscape is requested; in path 3, only the Liberation Serif,
+Liberation Sans, DejaVu or Noto fonts, which are the ones installed in the
+converter; one title, then sections, and a short summary at the start of a
+report longer than a few pages. The assistant's container has no Python,
+pandoc, LibreOffice or browser, so the assistant never builds the PDF itself.
+It asks before producing more than 50 pages and does not password-protect the
+PDF.
 
 ## Requirements
 
-- The `cerase-office-converter` connector for paths 1 and 2.
-- Python with `reportlab` wherever the assistant runs code, for path 3.
+- The `cerase-office-converter` connector for all three paths:
+  `convert_md_to_pdf`, `convert_docx_to_pdf` and `convert_html_to_pdf`.
 
 ## Files
 

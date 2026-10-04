@@ -4,6 +4,6 @@
   "name": "pdf-writer",
   "type": "skill",
   "display_name": "Pdf Writer",
-  "description": "Generates a PDF from structured content (report, letter, certificate). Uses cerase-office-converter via docx→pdf or md→pdf. For slide PDFs use `deck`/`pptx` with format=pdf.",
+  "description": "Generates a PDF document — a report, a letter, a certificate, a summary — through the office converter. For a slide deck in PDF use `deck`; for a spreadsheet in PDF, `xlsx`.",
   "license": "MIT"
 }

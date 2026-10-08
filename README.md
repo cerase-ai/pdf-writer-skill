@@ -1,10 +1,13 @@
 # pdf-writer-skill
 
-A Cerase skill that has the assistant produce a PDF document from content the
-conversation provides: a report, a business letter, a certificate, a summary.
-The assistant uses it for requests such as "generate a PDF report on…" or
-"export this summary to PDF", and when `source-to-artifact` asks for a PDF document. Slide
-decks go to the `deck` skill, and spreadsheets to the `xlsx` skill with
+A Cerase skill that has the assistant produce a plain PDF, for internal use,
+from content the conversation provides: notes, a summary, an export, a
+certificate on a designed page. The assistant uses it for requests such as
+"export these notes to PDF" or "a PDF of this summary, just for us", and when
+`source-to-artifact` asks for an internal PDF. A quote, a proposal, a report or
+a letter that a client or management will read goes to the `business-document`
+skill, because this converter's layout reads as an academic paper. Slide decks
+go to the `deck` skill, and spreadsheets to the `xlsx` skill with
 `cerase-office-converter.convert_xlsx_to_pdf`.
 
 ## What the assistant does

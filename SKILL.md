@@ -1,17 +1,16 @@
 ---
 name: pdf-writer
-description: "Generates a PDF document — a report, a letter, a certificate, a summary — through the office converter. For a slide deck in PDF use `deck`; for a spreadsheet in PDF, `xlsx`."
+description: "Generates a plain PDF through the office converter from text for internal use — notes, a summary, an export, a certificate on a designed page. A document a client or management will read (a quote, a proposal, a report, a letter) is the `business-document` skill; a slide deck is `deck`; a spreadsheet in PDF is `xlsx`."
 ---
 # PDF writer — documents as PDF
 
-Create a `.pdf` document from content the conversation provides. This skill is for documents: reports, business letters, certificates, summaries. A presentation in PDF is the `deck` skill. Your container runs no Python, so you never build the PDF yourself: the office converter does.
+Create a `.pdf` from content the conversation provides, for internal use: notes, summaries, exports, a certificate on a designed page. A quote, a proposal, a report or a letter that a client or management will read is made with the `business-document` skill, never here: this converter's layout reads as an academic paper. A presentation in PDF is the `deck` skill. Your container runs no Python, so you never build the PDF yourself: the office converter does.
 
 ## When to activate
 
-- "generate a PDF report on …"
-- "write me a letter as a PDF for …"
-- "export this summary to PDF"
-- `source-to-artifact` with a PDF document as the target
+- "export these notes to PDF"
+- "a PDF of this summary, just for us"
+- `source-to-artifact` with an internal PDF as the target
 
 ## Choose the path
 

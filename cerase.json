@@ -4,6 +4,6 @@
   "name": "pdf-writer",
   "type": "skill",
   "display_name": "Pdf Writer",
-  "description": "Generates a PDF document — a report, a letter, a certificate, a summary — through the office converter. For a slide deck in PDF use `deck`; for a spreadsheet in PDF, `xlsx`.",
+  "description": "Generates a plain PDF through the office converter from text for internal use — notes, a summary, an export, a certificate on a designed page. A document a client or management will read (a quote, a proposal, a report, a letter) is the `business-document` skill; a slide deck is `deck`; a spreadsheet in PDF is `xlsx`.",
   "license": "MIT"
 }

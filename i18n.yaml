@@ -6,4 +6,4 @@
 # of the bundle that ships to the agent.
 it:
   display_name: "Pdf Writer"
-  description: "Genera un documento PDF — un report, una lettera, un certificato, un riepilogo — tramite il convertitore di documenti. Per una presentazione in PDF usa `deck`; per un foglio di calcolo in PDF, `xlsx`."
+  description: "Genera un PDF semplice tramite il convertitore di documenti, da un testo per uso interno — appunti, un riepilogo, un'esportazione, un certificato su una pagina impaginata. Un documento che leggerà un cliente o la direzione (un preventivo, una proposta, una relazione, una lettera) è la skill `business-document`; una presentazione è `deck`; un foglio di calcolo in PDF è `xlsx`."

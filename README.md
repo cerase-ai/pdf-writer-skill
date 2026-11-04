@@ -1,5 +1,10 @@
 # pdf-writer-skill
 
+This skill is retired. Cerase now makes a PDF, and a Word, ODT or Google Docs
+document, through the `documents` skill:
+<https://github.com/cerase-ai/documents-skill>. This repository is archived and
+kept for its history.
+
 A Cerase skill that has the assistant produce a plain PDF, for internal use,
 from content the conversation provides: notes, a summary, an export, a
 certificate on a designed page. The assistant uses it for requests such as
